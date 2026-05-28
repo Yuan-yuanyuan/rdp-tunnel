@@ -1,0 +1,31 @@
+# both 模式配置示例
+# 同一个进程同时运行服务端 + 客户端
+# 典型场景：中继节点（接受来自其他客户端的连接，同时自己也连接上游服务端）
+mode: both
+
+# ── 服务端部分 ──────────────────────────────────────────────
+listen: ":8080"
+
+tls:
+  enabled: false
+
+token: "your-secret-token-change-me"
+path: "/api/v1/metrics"
+
+proxies:
+  - name: rdp
+    backend: "127.0.0.1:3389"
+  - name: ssh
+    backend: "127.0.0.1:22"
+
+# ── 客户端部分 ──────────────────────────────────────────────
+servers:
+  - name: upstream
+    url: "https://upstream-server.com:8080/api/v1/metrics"
+    token: "upstream-token"
+    insecure: false
+
+tunnels:
+  - listen: "127.0.0.1:13389"
+    server: upstream
+    proxy_name: rdp

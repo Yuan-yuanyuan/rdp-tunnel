@@ -1,0 +1,7 @@
+dist/
+*.crt
+*.key
+*.pem
+config.yaml
+server.yaml
+client.yaml
