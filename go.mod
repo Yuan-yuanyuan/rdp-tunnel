@@ -1,4 +1,4 @@
-module rdp-tunnel
+module intunnel
 
 go 1.22
 

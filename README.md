@@ -1,4 +1,4 @@
-# rdp-tunnel
+# intunnel
 
 TCP over WebSocket/TLS 隧道工具，支持正向代理和反向代理（内网穿透）。
 
@@ -15,7 +15,7 @@ TCP over WebSocket/TLS 隧道工具，支持正向代理和反向代理（内网
 
 ```
 家里电脑 ──WSS──▶ 云服务器:8443 ◀──WSS── 公司电脑
-  (tunnel client)   (tunnel server)   (tunnel client)
+  (intunnel client)  (intunnel server)  (intunnel client)
   mstsc 127.0.0.1:13389               expose 127.0.0.1:3389
 ```
 
@@ -27,7 +27,7 @@ TCP over WebSocket/TLS 隧道工具，支持正向代理和反向代理（内网
 
 ```bash
 openssl req -x509 -newkey rsa:4096 -keyout server.key -out server.crt \
-  -days 3650 -nodes -subj "/CN=tunnel"
+  -days 3650 -nodes -subj "/CN=intunnel"
 ```
 
 ### 云服务器 `server.yaml`
@@ -83,13 +83,13 @@ tunnels:
     proxy_name: home-to-office
 ```
 
-家里电脑启动 tunnel 后，`mstsc /v:127.0.0.1:13389` 即可连接公司电脑。
+家里电脑启动 intunnel 后，`mstsc /v:127.0.0.1:13389` 即可连接公司电脑。
 
 ## 运行
 
 ```bash
-./tunnel -config server.yaml   # 服务端
-./tunnel -config client.yaml   # 客户端
+./intunnel -config server.yaml   # 服务端
+./intunnel -config client.yaml   # 客户端
 ```
 
 ## 配置说明
@@ -116,13 +116,3 @@ tunnels:
 | `expose[].name` | 暴露名称，对应服务端 `@name` |
 | `expose[].backend` | 本地服务地址 |
 | `expose[].remote_port` | 服务端动态监听的端口 |
-
-## 与 frp / stunnel 对比
-
-| 特性 | rdp-tunnel | frp | stunnel |
-|------|-----------|-----|---------|
-| 内网穿透 | ✅ | ✅ | ❌ |
-| 协议伪装 | ✅ HTTPS | ❌ 自定义协议 | ⚠️ 仅加密 |
-| 动态端口 | ✅ 客户端决定 | ✅ | ❌ |
-| UDP 支持 | ❌ | ✅ | ❌ |
-| DPI 抗性 | 高 | 低 | 中 |
